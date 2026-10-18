@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f6f3ec" />
+    <meta name="description" content="一个清爽、可自定义的周记与月历应用。" />
+    <title>Weekbook · 周记</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="主导航">
+        <a class="brand" href="#" aria-label="Weekbook 首页">
+          <span class="brand-mark">W</span>
+          <span class="brand-copy"><strong>Weekbook</strong><small>make days visible</small></span>
+        </a>
+
+        <nav class="side-nav">
+          <button class="nav-item active" type="button" data-view="week" aria-pressed="true">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+            <span>周记</span>
+          </button>
+          <button class="nav-item" type="button" data-view="month" aria-pressed="false">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+            <span>月历</span>
+          </button>
+          <button class="nav-item" type="button" data-view="analysis" aria-pressed="false">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+            <span>数据分析</span>
+          </button>
+        </nav>
+
+        <div class="side-spacer"></div>
+        <button class="nav-item" id="openCategories" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 8.94 19.4a1.7 1.7 0 0 0-1.88.34L7 19.8 4.2 17l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.52-1H3v-4h.08A1.7 1.7 0 0 0 4.6 8.94a1.7 1.7 0 0 0-.34-1.88L4.2 7 7 4.2l.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 10 3.08V3h4v.08a1.7 1.7 0 0 0 1.03 1.52 1.7 1.7 0 0 0 1.88-.34l.06-.06L19.8 7l-.06.06a1.7 1.7 0 0 0-.34 1.88A1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+          <span>分类设置</span>
+        </button>
+        <div class="profile"><span class="avatar">日</span><span><strong>我的手帐</strong><small>仅保存在此浏览器</small></span></div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-mark">W</span><strong>Weekbook</strong></div>
+          <div class="view-label"><span class="eyebrow">PERSONAL JOURNAL</span><h1 id="pageTitle">这一周</h1></div>
+          <div class="header-actions">
+            <button class="today-button" id="todayButton" type="button">回到今天</button>
+          </div>
+        </header>
+
+        <section class="calendar-toolbar" aria-label="日期导航">
+          <div class="date-navigation">
+            <button class="icon-button" id="prevButton" type="button" aria-label="上一段时间"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+            <button class="icon-button" id="nextButton" type="button" aria-label="下一段时间"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+            <div class="period-copy"><p class="period-title" id="periodTitle"></p><p class="period-subtitle" id="periodSubtitle"></p></div>
+            <div class="month-filters" id="monthFilters" aria-label="按分类筛选月历" hidden></div>
+            <div class="analysis-period-toggle" id="analysisPeriodToggle" aria-label="数据分析周期" hidden>
+              <button type="button" data-analysis-period="week">周</button>
+              <button class="active" type="button" data-analysis-period="month">月</button>
+            </div>
+          </div>
+          <div class="toolbar-meta"><span class="count-pill" id="entryCount">0 条记录</span><span class="saved-state"><i></i> 已自动保存</span></div>
+        </section>
+
+        <section class="view-panel" id="weekView" aria-label="周视图">
+          <div class="week-scroll" id="weekScroll"><div class="week-grid" id="weekGrid"></div></div>
+          <p class="scroll-hint">所有分类自动等分页面 · 点击格子即可记录</p>
+        </section>
+
+        <section class="view-panel month-panel" id="monthView" aria-label="月视图" hidden>
+          <div class="month-weekdays" aria-hidden="true"><span>周一</span><span>周二</span><span>周三</span><span>周四</span><span>周五</span><span>周六</span><span>周日</span></div>
+          <div class="month-grid" id="monthGrid"></div>
+        </section>
+
+        <section class="view-panel analysis-panel" id="analysisView" aria-label="数据分析" hidden>
+          <div class="analysis-overview" id="analysisOverview"></div>
+          <div class="analysis-layout">
+            <section class="analysis-card">
+              <div class="analysis-card-header"><div><span class="eyebrow">TIME BY CATEGORY</span><h2>时间走向</h2></div><span class="analysis-note">占比以本期总时长为基准 · 增减幅以自身上一期为基准</span></div>
+              <div class="category-breakdown" id="categoryBreakdown"></div>
+            </section>
+            <section class="analysis-card">
+              <div class="analysis-card-header"><div><span class="eyebrow">WEEKDAY RHYTHM</span><h2>星期节奏</h2></div></div>
+              <div class="daily-breakdown" id="dailyBreakdown"></div>
+            </section>
+          </div>
+        </section>
+
+        <nav class="mobile-nav" aria-label="移动端主导航">
+          <button class="active" type="button" data-view="week"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01"/></svg><span>周记</span></button>
+          <button type="button" data-view="month"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><span>月历</span></button>
+          <button type="button" data-view="analysis"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>分析</span></button>
+          <button type="button" id="mobileAdd"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>新记录</span></button>
+        </nav>
+      </main>
+    </div>
+
+    <dialog class="modal entry-modal" id="entryDialog">
+      <form method="dialog" id="entryForm">
+        <div class="modal-header"><div><span class="eyebrow">JOURNAL ENTRY</span><h2 id="entryDialogTitle">添加记录</h2><p id="entryDateLabel"></p></div><button class="icon-button close-button" value="cancel" aria-label="关闭" type="submit"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+        <div class="modal-body">
+          <input type="hidden" id="entryId" />
+          <label class="field"><span>分类</span><select id="entryCategory" required></select></label>
+          <label class="field" id="subcategoryField"><span>子类别 <small>选填</small></span><select id="entrySubcategory"></select></label>
+          <label class="field"><span>简短标题</span><input id="entryTitle" maxlength="60" required placeholder="例如：百年孤独" autocomplete="off" /></label>
+          <label class="field"><span>页码 / 集数 / 补充说明 <small>选填</small></span><input id="entryDetail" maxlength="80" placeholder="例如：P. 120–156 / S02E03" autocomplete="off" /></label>
+          <label class="field"><span>投入时长 <small>仅用于数据分析，不在周记和月历显示</small></span><span class="duration-input"><input id="entryDuration" type="number" min="0" max="1440" step="5" inputmode="numeric" placeholder="例如：45" /><em>分钟</em></span></label>
+          <fieldset class="color-field"><legend>文字颜色</legend><div class="color-options" id="colorOptions"></div></fieldset>
+        </div>
+        <div class="modal-footer"><button class="danger-button" id="deleteEntry" type="button">删除记录</button><div class="footer-spacer"></div><button class="secondary-button" value="cancel" type="submit">取消</button><button class="primary-button" id="saveEntry" type="button">保存记录</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal categories-modal" id="categoriesDialog">
+      <form method="dialog">
+        <div class="modal-header"><div><span class="eyebrow">COLUMNS & TAGS</span><h2>分类设置</h2><p>一级分类显示为周记列，子类别可独立设置颜色</p></div><button class="icon-button close-button" value="cancel" aria-label="关闭" type="submit"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+        <div class="modal-body"><div class="category-list" id="categoryList"></div><button class="add-category-button" id="addCategory" type="button"><span>＋</span> 新增一个分类</button></div>
+        <div class="modal-footer category-footer"><button class="text-button" id="resetDemo" type="button">恢复示例数据</button><div class="footer-spacer"></div><button class="primary-button" value="cancel" type="submit">完成</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal day-modal" id="dayDialog">
+      <form method="dialog">
+        <div class="modal-header"><div><span class="eyebrow">DAY OVERVIEW</span><h2 id="dayDialogTitle"></h2><p id="dayDialogSubtitle"></p></div><button class="icon-button close-button" value="cancel" aria-label="关闭" type="submit"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+        <div class="modal-body"><div class="day-entry-list" id="dayEntryList"></div></div>
+        <div class="modal-footer"><div class="footer-spacer"></div><button class="primary-button" id="addFromDay" type="button">＋ 添加当天记录</button></div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
